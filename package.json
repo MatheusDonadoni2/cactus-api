@@ -5,7 +5,6 @@
   "author": "",
   "private": true,
   "license": "UNLICENSED",
-  "type": "module",
   "scripts": {
     "services:up": "docker compose -f src/infra/compose.yml up -d",
     "services:down": "docker compose -f src/infra/compose.yml stop",

@@ -1,5 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
-import { GetStatusService } from '../../../../domain/back-office/services/status/get.status.service';
+import { GetStatusService } from 'src/domain/back-office/services/status/get.status.service';
 import {
   Presenter,
   IPresenterGetStatus,

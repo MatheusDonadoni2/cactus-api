@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PGService } from '../pg.service';
-import { Status } from '../../../../domain/back-office/entities/status';
+import { Status } from 'src/domain/back-office/entities/status';
 
 @Injectable()
 export class PGStatusRepository {
