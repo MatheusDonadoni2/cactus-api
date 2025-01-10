@@ -1,4 +1,4 @@
-import { Status } from '../../entities/status';
+import { Status } from 'src/domain/back-office/entities/status';
 
 export interface IPresenterGetStatus {
   updated_at: string;
