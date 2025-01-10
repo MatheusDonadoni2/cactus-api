@@ -3,7 +3,7 @@ import { GetStatusService } from '../../../../domain/back-office/services/status
 import {
   Presenter,
   IPresenterGetStatus,
-} from './presenter/get.status.controller.presenter';
+} from './get.status.controller.presenter';
 @Controller('v1/status')
 export class GetStatusController {
   constructor(private readonly getStatusService: GetStatusService) {}
