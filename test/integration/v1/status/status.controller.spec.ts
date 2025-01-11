@@ -19,7 +19,8 @@ describe('GET /v1/status', () => {
   describe('Anonymous uses', () => {
     test('Retrieving current system status', async () => {
       const response = await request(app.getHttpServer()).get('/v1/status');
-      console.log({ response: response.body });
+      console.log(response.body);
+
       expect(1).toBe(1);
     });
   });
