@@ -19,8 +19,6 @@ export class GetStatusController {
     if (result.isLeft()) {
       const error = result.value;
 
-      console.log({ error });
-
       switch (error.constructor) {
         case InternalServerError:
           throw new InternalServerErrorException();
@@ -30,6 +28,7 @@ export class GetStatusController {
     }
 
     const { status } = result.value;
+
     return {
       data: Presenter.getStatus(status),
     };
