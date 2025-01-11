@@ -30,7 +30,7 @@ export class PGStatusRepository {
       const databaseOpenedConnectionsResultValue =
         databaseOpenedConnectionsResult.rows[0].count;
 
-      const status = new Status({
+      return new Status({
         updated_at: updated_at,
         dependencies: {
           database: {
@@ -40,7 +40,6 @@ export class PGStatusRepository {
           },
         },
       });
-      return status;
     } catch (error) {
       throw error;
     }
