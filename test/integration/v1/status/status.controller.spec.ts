@@ -19,9 +19,15 @@ describe('GET /v1/status', () => {
   describe('Anonymous uses', () => {
     test('Retrieving current system status', async () => {
       const response = await request(app.getHttpServer()).get('/v1/status');
-      console.log(response.body);
 
-      expect(1).toBe(1);
+      expect(response.statusCode).toEqual(200);
+
+      const { body } = response;
+
+      expect(body.data.updated_at).toBeDefined();
+      expect(parseInt(body.data.dependencies.database.version)).toEqual(16);
+      expect(body.data.dependencies.database.max_connections).toEqual(100);
+      expect(body.data.dependencies.database.opened_connections).toEqual(1);
     });
   });
 });
