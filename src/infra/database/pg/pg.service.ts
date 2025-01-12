@@ -1,17 +1,20 @@
 import { Client, QueryConfig } from 'pg';
 import { Injectable } from '@nestjs/common';
+import { EnvService } from 'src/infra/env/env.service';
 
 @Injectable()
 export class PGService {
   private client: Client;
 
+  constructor(private envService: EnvService) {}
+
   private getNewConnection(): Client {
     const client = (this.client = new Client({
-      host: process.env.POSTGRES_HOST,
-      port: parseInt(process.env.POSTGRES_PORT),
-      user: process.env.POSTGRES_USER,
-      database: process.env.POSTGRES_DB,
-      password: process.env.POSTGRES_PASSWORD,
+      host: this.envService.get('POSTGRES_HOST'),
+      port: this.envService.get('POSTGRES_PORT'),
+      user: this.envService.get('POSTGRES_USER'),
+      database: this.envService.get('POSTGRES_DB'),
+      password: this.envService.get('POSTGRES_PASSWORD'),
     }));
 
     return client;
