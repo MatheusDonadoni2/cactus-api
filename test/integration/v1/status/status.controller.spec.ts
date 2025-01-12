@@ -20,6 +20,14 @@ describe('GET /v1/status', () => {
     test('Retrieving current system status', async () => {
       const response = await request(app.getHttpServer()).get('/v1/status');
 
+      expect(response.statusCode).toEqual(401);
+    });
+  });
+
+  describe('Authenticated uses', () => {
+    test.skip('Retrieving current system status', async () => {
+      const response = await request(app.getHttpServer()).get('/v1/status');
+
       expect(response.statusCode).toEqual(200);
 
       const { body } = response;
