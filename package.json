@@ -9,7 +9,7 @@
     "services:up": "docker compose -f src/infra/compose.yml up -d",
     "services:down": "docker compose -f src/infra/compose.yml stop",
     "start": "nest start",
-    "start:watch": "nest start --watch",
+    "start:watch": "nest start --watchAll --verbose",
     "test": "npm run services:up && jest",
     "posttest": "npm run services:down",
     "test:watch": "jest --watch",
@@ -20,10 +20,12 @@
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.3.0",
     "@nestjs/core": "^10.0.0",
+    "@nestjs/jwt": "^10.2.0",
     "@nestjs/platform-express": "^10.0.0",
     "pg": "^8.13.1",
     "reflect-metadata": "^0.2.0",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.6.1",
