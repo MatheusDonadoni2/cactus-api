@@ -12,10 +12,6 @@ import { EnvService } from 'src/infra/env/env.service';
 
 @Injectable()
 export class AuthenticationGuard implements CanActivate {
-  private readonly jwtConstants = {
-    secret: process.env.JWT_SECRET_KEY,
-  };
-
   constructor(
     private jwtService: JwtService,
     private reflector: Reflector,
@@ -46,7 +42,7 @@ export class AuthenticationGuard implements CanActivate {
 
     try {
       const payload = await this.jwtService.verifyAsync(token, {
-        secret: this.jwtConstants.secret,
+        secret: this.envService.get('JWT_SECRET_KEY'),
       });
 
       request['user'] = payload;

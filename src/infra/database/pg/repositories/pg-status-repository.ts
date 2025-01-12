@@ -1,10 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { PGService } from '../pg.service';
 import { Status } from 'src/domain/back-office/entities/status';
+import { EnvService } from 'src/infra/env/env.service';
 
 @Injectable()
 export class PGStatusRepository {
-  constructor(private pgService: PGService) {}
+  constructor(
+    private pgService: PGService,
+    private envService: EnvService,
+  ) {}
 
   async getStatus(): Promise<Status> {
     try {
@@ -22,7 +26,7 @@ export class PGStatusRepository {
       const databaseMaxConnectionsResultValue =
         databaseMaxConnectionsResult.rows[0].max_connections;
 
-      const databaseName = process.env.POSTGRES_DB;
+      const databaseName = this.envService.get('POSTGRES_DB');
       const databaseOpenedConnectionsResult = await this.pgService.query({
         text: `SELECT COUNT(1)::int from pg_stat_activity WHERE datname = $1`,
         values: [databaseName],
