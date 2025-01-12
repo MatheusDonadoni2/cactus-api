@@ -3,9 +3,11 @@ import { INestApplication } from '@nestjs/common';
 import { AppModule } from '../../../../src/app.module';
 
 import * as request from 'supertest';
+import { GenerateJWTTokenService } from 'src/infra/authentication/services/generate.jwt.token.service';
 
 describe('GET /v1/status', () => {
   let app: INestApplication;
+  let jwt: GenerateJWTTokenService;
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -13,6 +15,8 @@ describe('GET /v1/status', () => {
     }).compile();
 
     app = moduleRef.createNestApplication();
+    jwt = moduleRef.get(GenerateJWTTokenService);
+
     await app.init();
   });
 
@@ -25,8 +29,18 @@ describe('GET /v1/status', () => {
   });
 
   describe('Authenticated uses', () => {
-    test.skip('Retrieving current system status', async () => {
-      const response = await request(app.getHttpServer()).get('/v1/status');
+    test('Retrieving current system status', async () => {
+      const JWTResult = await jwt.execute({});
+
+      let access_token: string;
+
+      if (JWTResult.isRight()) {
+        access_token = JWTResult.value.access_token;
+      }
+
+      const response = await request(app.getHttpServer())
+        .get('/v1/status')
+        .set('Authorization', `Bearer ${access_token}`);
 
       expect(response.statusCode).toEqual(200);
 
