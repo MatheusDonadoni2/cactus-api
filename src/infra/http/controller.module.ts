@@ -5,9 +5,10 @@ import { DatabaseModule } from '../database/database.module';
 import { AuthenticateUserController } from 'src/domain/back-office/controllers/user/authenticate.user.controller';
 import { AuthenticateUserService } from 'src/domain/back-office/services/user/services/authenticate.user.service';
 import { AuthenticationModule } from '../authentication/authentication.module';
+import { CryptographyModule } from '../cryptography/cryptography.module';
 
 @Module({
-  imports: [DatabaseModule, AuthenticationModule],
+  imports: [DatabaseModule, AuthenticationModule, CryptographyModule],
   providers: [AuthenticateUserService, GetStatusService],
   controllers: [AuthenticateUserController, GetStatusController],
 })

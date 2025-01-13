@@ -18,7 +18,12 @@ describe('GET /v1/status', () => {
 
   describe('Authenticate user', () => {
     test('Retrieving access token', async () => {
-      const response = await request(app.getHttpServer()).get('/v1/users/auth');
+      const response = await request(app.getHttpServer())
+        .get('/v1/users/auth')
+        .send({
+          username: 'FAKE_USERNAME',
+          password: 'FAKE_PASSWORD',
+        });
       const data = response.body.data;
       expect(typeof data.access_token).toEqual('string');
     });

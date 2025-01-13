@@ -22,7 +22,6 @@ export class GenerateJWTTokenService {
         access_token,
       });
     } catch (error) {
-      console.error(error);
       return left(new InternalServerError(error));
     }
   }

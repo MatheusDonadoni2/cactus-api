@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
-import { BcryptHasherService } from './services/criptografy.service';
+import { CryptographyService } from './services/cryptography.service';
 
 @Module({
-  exports: [BcryptHasherService],
+  providers: [CryptographyService],
+  exports: [CryptographyService],
 })
-export class CriptografyModule {}
+export class CryptographyModule {}
