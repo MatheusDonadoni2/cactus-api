@@ -3,9 +3,6 @@ import { JwtModule } from '@nestjs/jwt';
 
 import { AuthenticationGuard } from './guards/authentication.guard';
 
-import { AuthenticateUserService } from 'src/domain/back-office/services/user/services/authenticate.user.service';
-import { ValidateUserAccessServices } from 'src/domain/back-office/services/user/services/validate.user.access.service';
-
 import { GenerateJWTTokenService } from './services/generate.jwt.token.service';
 import { APP_GUARD } from '@nestjs/core';
 import { EnvModule } from '../env/env.module';
@@ -33,9 +30,7 @@ import { EnvService } from '../env/env.service';
     },
     AuthenticationGuard,
     GenerateJWTTokenService,
-    ValidateUserAccessServices,
-    AuthenticateUserService,
   ],
-  exports: [EnvModule, AuthenticateUserService, GenerateJWTTokenService],
+  exports: [EnvModule, GenerateJWTTokenService],
 })
 export class AuthenticationModule {}

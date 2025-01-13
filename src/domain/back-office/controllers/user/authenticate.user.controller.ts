@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  Body,
   Controller,
   Get,
   InternalServerErrorException,
@@ -8,14 +9,22 @@ import { AuthenticateUserService } from '../../services/user/services/authentica
 import { InternalServerError } from 'src/core/error/custom-errors-class/internal-server-error';
 import { Public } from 'src/infra/authentication/decorator/public.decorator';
 
+type AuthenticateUserControllerDTO = {
+  username: string;
+  password: string;
+};
+
 @Controller('v1/users/auth')
 export class AuthenticateUserController {
   constructor(private authenticateUserService: AuthenticateUserService) {}
 
   @Public()
   @Get()
-  async handle() {
-    const result = await this.authenticateUserService.execute();
+  async handle(@Body() body: AuthenticateUserControllerDTO) {
+    const result = await this.authenticateUserService.execute({
+      username: body.username,
+      password: body.password,
+    });
 
     if (result.isLeft()) {
       const error = result.value;
