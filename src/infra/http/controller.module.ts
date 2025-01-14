@@ -6,10 +6,16 @@ import { AuthenticateUserController } from 'src/domain/back-office/controllers/u
 import { AuthenticateUserService } from 'src/domain/back-office/services/user/services/authenticate.user.service';
 import { AuthenticationModule } from '../authentication/authentication.module';
 import { CryptographyModule } from '../cryptography/cryptography.module';
+import { CreatePersonService } from 'src/domain/back-office/services/person/create.person.service';
+import { CreatePersonController } from 'src/domain/back-office/controllers/person/create.person.controller';
 
 @Module({
   imports: [DatabaseModule, AuthenticationModule, CryptographyModule],
-  providers: [AuthenticateUserService, GetStatusService],
-  controllers: [AuthenticateUserController, GetStatusController],
+  providers: [AuthenticateUserService, GetStatusService, CreatePersonService],
+  controllers: [
+    AuthenticateUserController,
+    GetStatusController,
+    CreatePersonController,
+  ],
 })
 export class ControllerModule {}
