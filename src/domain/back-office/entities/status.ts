@@ -8,7 +8,7 @@ interface IStatusDependencies {
   database: IStatusDependenciesDatabase;
 }
 
-interface IStatus {
+export interface IStatus {
   updated_at: string;
   dependencies: IStatusDependencies;
 }
@@ -18,6 +18,10 @@ export class Status {
 
   constructor(props: IStatus) {
     this.props = props;
+  }
+
+  setUpdatedAt(value: string) {
+    this.props.updated_at = value;
   }
 
   getUpdatedAt() {

@@ -20,6 +20,10 @@ export async function up(pgm: MigrationBuilder): Promise<void> {
       unique: true,
       notNull: true,
     },
+    username: {
+      type: 'varchar(50)',
+      notNull: true,
+    },
     password: {
       type: 'varchar(250)',
       notNull: true,
