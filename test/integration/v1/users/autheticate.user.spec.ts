@@ -7,12 +7,15 @@ import { DatabaseModule } from 'src/infra/database/database.module';
 import { FactoryUser, makeUser } from 'test/factories/factory.user';
 import { FactoryPerson } from 'test/factories/factory.person';
 import { CryptographyModule } from 'src/infra/cryptography/cryptography.module';
+import { DatabaseService } from 'test/setup.e2e';
 
 describe('GET /v1/status', () => {
   let app: INestApplication;
   let factoryUser: FactoryUser;
 
   beforeEach(async () => {
+    await DatabaseService.start();
+
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule, DatabaseModule, CryptographyModule],
       providers: [FactoryPerson, FactoryUser],

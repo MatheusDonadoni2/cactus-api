@@ -1,15 +1,18 @@
 import { Test } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import { AppModule } from '../../../../src/app.module';
+import { AppModule } from 'src/app.module';
 
 import * as request from 'supertest';
 import { GenerateJWTTokenService } from 'src/infra/authentication/services/generate.jwt.token.service';
+import { DatabaseService } from 'test/setup.e2e';
 
 describe('GET /v1/status', () => {
   let app: INestApplication;
   let jwt: GenerateJWTTokenService;
 
   beforeEach(async () => {
+    await DatabaseService.start();
+
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();

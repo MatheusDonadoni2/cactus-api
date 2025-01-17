@@ -10,7 +10,7 @@
     "services:down": "docker compose -f src/infra/compose.yml stop",
     "start": "nest start",
     "start:watch": "nest start --watchAll --verbose",
-    "test": "npm run services:up && npm run migrations:up && jest --config=test/jest.config.ts",
+    "test": "npm run services:up && jest --config=test/jest.config.ts --runInBand",
     "posttest": "npm run services:down",
     "test:watch": "jest --watch",
     "posttest:watch": "npm run services:down",

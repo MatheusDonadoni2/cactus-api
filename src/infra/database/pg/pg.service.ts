@@ -9,13 +9,13 @@ export class PGService {
   constructor(private envService: EnvService) {}
 
   private getNewConnection(): Client {
-    const client = (this.client = new Client({
+    const client = new Client({
       host: this.envService.get('POSTGRES_HOST'),
       port: this.envService.get('POSTGRES_PORT'),
       user: this.envService.get('POSTGRES_USER'),
       database: this.envService.get('POSTGRES_DB'),
       password: this.envService.get('POSTGRES_PASSWORD'),
-    }));
+    });
 
     return client;
   }
