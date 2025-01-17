@@ -31,10 +31,7 @@ export class FactoryUser {
         name: data.person.getName(),
       });
     } else {
-      const make_person = makePerson();
-      person = await this.factoryPerson.makePersonOnDatabase({
-        name: make_person.getName(),
-      });
+      person = await this.factoryPerson.makePersonOnDatabase();
     }
 
     const user = makeUser({
