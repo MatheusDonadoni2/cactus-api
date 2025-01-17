@@ -4,6 +4,7 @@ import { UsernameOrPasswordIncorrect } from 'src/core/error/custom-errors-class/
 import { Either, left, right } from 'src/core/error/either';
 import { GenerateJWTTokenService } from 'src/infra/authentication/services/generate.jwt.token.service';
 import { CryptographyService } from 'src/infra/cryptography/services/cryptography.service';
+import { GetUserServiceByUserNameService } from './get.user.service';
 
 interface AuthenticateUserServiceRequest {
   username: string;
@@ -19,32 +20,31 @@ type AuthenticateUserServiceResponse = Either<
 
 @Injectable()
 export class AuthenticateUserService {
-  private FAKE_USER = {
-    id: '1',
-    user_name: 'FAKE_USERNAME',
-    fake_password: 'FAKE_PASSWORD',
-  };
-
   constructor(
     private generateJWTTokenService: GenerateJWTTokenService,
     private cryptographyService: CryptographyService,
+    private getUserServiceByUserNameService: GetUserServiceByUserNameService,
   ) {}
   async execute(
     props: AuthenticateUserServiceRequest,
   ): Promise<AuthenticateUserServiceResponse> {
-    this.FAKE_USER.fake_password = await this.cryptographyService.hash(
-      this.FAKE_USER.fake_password,
-    );
-
     const { username, password } = props;
 
-    if (!(username === this.FAKE_USER.user_name)) {
+    const user = await this.getUserServiceByUserNameService.execute({
+      username,
+    });
+
+    if (user.isLeft()) {
+      return left(new UsernameOrPasswordIncorrect());
+    }
+
+    if (username !== user.value.user.getUsername()) {
       return left(new UsernameOrPasswordIncorrect());
     }
 
     const isValidPassword = await this.cryptographyService.compare(
       password,
-      this.FAKE_USER.fake_password,
+      user.value.user.getPassword(),
     );
 
     if (!isValidPassword) {
