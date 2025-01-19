@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { EnvModule } from '../env/env.module';
-import { PGService } from './pg/pg.service';
 
-import { PGStatusRepository } from './pg/repositories/pg-status-repository';
-import { PersonRepository } from './pg/repositories/person-repository';
-import { UserRepository } from './pg/repositories/user.repository';
+import { PGService } from '~infra/database/pg/pg.service';
+import { PersonRepository } from '~infra/database/pg/repositories/person-repository';
+import { PGStatusRepository } from '~infra/database/pg/repositories/pg-status-repository';
+import { UserRepository } from '~infra/database/pg/repositories/user.repository';
+import { EnvModule } from '~infra/env/env.module';
 
 @Module({
   imports: [EnvModule],

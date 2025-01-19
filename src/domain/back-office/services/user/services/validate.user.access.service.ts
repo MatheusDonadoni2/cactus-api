@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { InternalServerError } from 'src/core/error/custom-errors-class/internal-server-error';
-import { Either, right } from 'src/core/error/either';
+
+import { InternalServerError } from '~/core/error/custom-errors-class/internal-server-error';
+import { Either, right } from '~/core/error/either';
 
 type ValidateUserAccessServicesResponse = Either<
   InternalServerError,

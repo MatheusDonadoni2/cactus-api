@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { PGService } from '../pg.service';
-import { Person } from 'src/domain/back-office/entities/person';
+
+import { Person } from '~backOffice/entities/person';
+import { PGService } from '~infra/database/pg/pg.service';
 
 @Injectable()
 export class PersonRepository {

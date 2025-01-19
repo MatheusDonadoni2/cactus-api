@@ -1,4 +1,4 @@
-import { UseCaseError } from '../use-case-error';
+import { UseCaseError } from '~/core/error/use-case-error';
 
 export class InternalServerError extends Error implements UseCaseError {
   name: string;
