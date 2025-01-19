@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 
-import { PGStatusRepository } from 'src/infra/database/pg/repositories/pg-status-repository';
-import { Status } from 'src/domain/back-office/entities/status';
-import { Either, left, right } from 'src/core/error/either';
-import { InternalServerError } from 'src/core/error/custom-errors-class/internal-server-error';
+import { Either, left, right } from '~/core/error/either';
+import { PGStatusRepository } from '~/infra/database/pg/repositories/pg-status-repository';
+import { Status } from '~backOffice/entities/status';
+import { InternalServerError } from '~customErrors/internal-server-error';
 
 type GetStatusServiceResponse = Either<
   InternalServerError,

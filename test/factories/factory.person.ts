@@ -1,8 +1,9 @@
 import { faker } from '@faker-js/faker';
 import { Injectable } from '@nestjs/common';
 import { UniqueEntityId } from 'src/core/entities/unique-entity-id';
-import { Person, IPerson } from '@backOffice/entities/person';
-import { PersonRepository } from '@infra/database/pg/repositories/person-repository';
+
+import { IPerson, Person } from '~backOffice/entities/person';
+import { PersonRepository } from '~infra/database/pg/repositories/person-repository';
 
 export function makePerson(override?: Partial<IPerson>, id?: UniqueEntityId) {
   const props = {

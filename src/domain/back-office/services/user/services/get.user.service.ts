@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { InternalServerError } from 'src/core/error/custom-errors-class/internal-server-error';
-import { ResourceNotFound } from 'src/core/error/custom-errors-class/resource.not.found';
-import { Either, left, right } from 'src/core/error/either';
-import { User } from 'src/domain/back-office/entities/user';
-import { UserRepository } from 'src/infra/database/pg/repositories/user.repository';
+
+import { Either, left, right } from '~/core/error/either';
+import { UserRepository } from '~/infra/database/pg/repositories/user.repository';
+import { User } from '~backOffice/entities/user';
+import { InternalServerError } from '~customErrors/internal-server-error';
+import { ResourceNotFound } from '~customErrors/resource.not.found';
 
 type GetUserServiceByUserNameServiceRequest = { username: string };
 type GetUserServiceByUserNameServiceResponse = Either<

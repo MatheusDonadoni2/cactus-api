@@ -1,6 +1,6 @@
-import { Entity } from '@/core/entities/entity';
-import { Person } from '@backOffice/entities/person';
-import { UniqueEntityId } from '@/core/entities/unique-entity-id';
+import { Entity } from '~/core/entities/entity';
+import { UniqueEntityId } from '~/core/entities/unique-entity-id';
+import { Person } from '~backOffice/entities/person';
 
 export interface IUser {
   person: Person;

@@ -1,5 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { CreatePersonService } from '@backOffice/services/person/create.person.service';
+
+import { CreatePersonService } from '~backOffice/services/person/create.person.service';
 
 interface CreatePersonControllerRequest {
   name: string;

@@ -7,10 +7,10 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 
-import { Public } from '@infra/authentication/decorator/public.decorator';
-import { InternalServerError } from '@customErrors/internal-server-error';
-import { UsernameOrPasswordIncorrect } from '@customErrors/username-or-password-incorrect';
-import { AuthenticateUserService } from '@backOffice/services/user/services/authenticate.user.service';
+import { AuthenticateUserService } from '~backOffice/services/user/services/authenticate.user.service';
+import { InternalServerError } from '~customErrors/internal-server-error';
+import { UsernameOrPasswordIncorrect } from '~customErrors/username-or-password-incorrect';
+import { Public } from '~infra/authentication/decorator/public.decorator';
 
 type AuthenticateUserControllerDTO = {
   username: string;

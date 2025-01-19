@@ -1,14 +1,14 @@
-import * as request from 'supertest';
-import { Test } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
-
-import { AppModule } from 'src/app.module';
-import { DatabaseModule } from 'src/infra/database/database.module';
-import { FactoryUser, makeUser } from 'test/factories/factory.user';
-import { FactoryPerson } from 'test/factories/factory.person';
-import { CryptographyModule } from 'src/infra/cryptography/cryptography.module';
-import { DatabaseService } from 'test/setup.e2e';
 import { faker } from '@faker-js/faker/.';
+import { INestApplication } from '@nestjs/common';
+import { Test } from '@nestjs/testing';
+import * as request from 'supertest';
+import { FactoryPerson } from 'test/factories/factory.person';
+import { FactoryUser, makeUser } from 'test/factories/factory.user';
+import { DatabaseService } from 'test/setup.e2e';
+
+import { AppModule } from '~/app.module';
+import { CryptographyModule } from '~infra/cryptography/cryptography.module';
+import { DatabaseModule } from '~infra/database/database.module';
 
 describe('GET /v1/status', () => {
   let app: INestApplication;

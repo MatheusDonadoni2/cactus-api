@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
 import { APP_GUARD } from '@nestjs/core';
+import { JwtModule } from '@nestjs/jwt';
 
-import { AuthenticationGuard } from '@infra/authentication/guards/authentication.guard';
-import { GenerateJWTTokenService } from '@infra/authentication/services/generate.jwt.token.service';
-import { EnvModule } from '@infra/env/env.module';
-import { EnvService } from '@infra/env/env.service';
+import { AuthenticationGuard } from '~infra/authentication/guards/authentication.guard';
+import { GenerateJWTTokenService } from '~infra/authentication/services/generate.jwt.token.service';
+import { EnvModule } from '~infra/env/env.module';
+import { EnvService } from '~infra/env/env.service';
 
 @Module({
   imports: [

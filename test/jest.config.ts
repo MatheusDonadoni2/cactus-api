@@ -1,5 +1,4 @@
 import type { Config } from 'jest';
-
 import { pathsToModuleNameMapper } from 'ts-jest';
 
 const config: Config = {
@@ -14,10 +13,10 @@ const config: Config = {
   testEnvironment: 'node',
   moduleNameMapper: pathsToModuleNameMapper(
     {
-      '@/*': ['./src/*'],
-      '@backOffice/*': ['./src/domain/back-office/*'],
-      '@customErrors/*': ['./src/core/error/custom-errors-class/*'],
-      '@infra/*': ['./src/infra/*'],
+      '~/*': ['./src/*'],
+      '~backOffice/*': ['./src/domain/back-office/*'],
+      '~customErrors/*': ['./src/core/error/custom-errors-class/*'],
+      '~infra/*': ['./src/infra/*'],
     },
     {
       prefix: '<rootDir>',

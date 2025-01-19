@@ -1,9 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { InternalServerError } from 'src/core/error/custom-errors-class/internal-server-error';
-import { UsernameOrPasswordIncorrect } from 'src/core/error/custom-errors-class/username-or-password-incorrect';
-import { Either, left, right } from 'src/core/error/either';
-import { GenerateJWTTokenService } from 'src/infra/authentication/services/generate.jwt.token.service';
-import { CryptographyService } from 'src/infra/cryptography/services/cryptography.service';
+
+import { Either, left, right } from '~/core/error/either';
+import { InternalServerError } from '~customErrors/internal-server-error';
+import { UsernameOrPasswordIncorrect } from '~customErrors/username-or-password-incorrect';
+import { GenerateJWTTokenService } from '~infra/authentication/services/generate.jwt.token.service';
+import { CryptographyService } from '~infra/cryptography/services/cryptography.service';
+
 import { GetUserServiceByUserNameService } from './get.user.service';
 
 interface AuthenticateUserServiceRequest {

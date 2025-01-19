@@ -1,10 +1,12 @@
 import { faker } from '@faker-js/faker';
 import { Injectable } from '@nestjs/common';
+
+import { UniqueEntityId } from '~/core/entities/unique-entity-id';
+import { IUser, User } from '~backOffice/entities/user';
+import { CryptographyService } from '~infra/cryptography/services/cryptography.service';
+import { UserRepository } from '~infra/database/pg/repositories/user.repository';
+
 import { FactoryPerson, makePerson } from './factory.person';
-import { UniqueEntityId } from '@/core/entities/unique-entity-id';
-import { User, IUser } from '@backOffice/entities/user';
-import { UserRepository } from '@infra/database/pg/repositories/user.repository';
-import { CryptographyService } from '@infra/cryptography/services/cryptography.service';
 
 export function makeUser(override?: Partial<IUser>, id?: UniqueEntityId) {
   const props: IUser = {
