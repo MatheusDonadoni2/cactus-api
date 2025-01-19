@@ -17,6 +17,12 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@/*": ["./src/*"],
+      "@backOffice/*": ["./src/domain/back-office/*"],
+      "@customErrors/*": ["./src/core/error/custom-errors-class/*"],
+      "@infra/*": ["./src/infra/*"]
+    }
   }
 }

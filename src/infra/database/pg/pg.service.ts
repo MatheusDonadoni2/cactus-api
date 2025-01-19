@@ -1,6 +1,6 @@
 import { Client, QueryConfig } from 'pg';
 import { Injectable } from '@nestjs/common';
-import { EnvService } from 'src/infra/env/env.service';
+import { EnvService } from '@infra/env/env.service';
 
 @Injectable()
 export class PGService {

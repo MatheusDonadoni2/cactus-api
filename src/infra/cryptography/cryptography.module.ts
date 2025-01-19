@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { CryptographyService } from './services/cryptography.service';
+import { CryptographyService } from '@infra/cryptography/services/cryptography.service';
 
 @Module({
   providers: [CryptographyService],

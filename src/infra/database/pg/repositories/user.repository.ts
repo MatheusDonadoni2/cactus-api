@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { PGService } from '../pg.service';
-import { User } from 'src/domain/back-office/entities/user';
-import { Person } from 'src/domain/back-office/entities/person';
-import { UniqueEntityId } from 'src/core/entities/unique-entity-id';
+import { PGService } from '@infra/database/pg/pg.service';
+import { User } from '@backOffice/entities/user';
+import { Person } from '@backOffice/entities/person';
+import { UniqueEntityId } from '@/core/entities/unique-entity-id';
 
 @Injectable()
 export class UserRepository {

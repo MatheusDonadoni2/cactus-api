@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { InternalServerError } from 'src/core/error/custom-errors-class/internal-server-error';
-import { Either, left, right } from 'src/core/error/either';
-import { Person } from 'src/domain/back-office/entities/person';
-import { PersonRepository } from 'src/infra/database/pg/repositories/person-repository';
+import { Either, left, right } from '@/core/error/either';
+import { Person } from '@backOffice/entities/person';
+import { InternalServerError } from '@customErrors/internal-server-error';
+import { PersonRepository } from '@infra/database/pg/repositories/person-repository';
 
 interface CreatePersonServiceRequest {
   name: string;
