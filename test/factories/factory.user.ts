@@ -1,43 +1,46 @@
 import { faker } from '@faker-js/faker';
 import { Injectable } from '@nestjs/common';
 import { User, IUser } from 'src/domain/back-office/entities/user';
-import { PGService } from 'src/infra/database/pg/pg.service';
 import { FactoryPerson, makePerson } from './factory.person';
-import { Person } from 'src/domain/back-office/entities/person';
 import { CryptographyService } from 'src/infra/cryptography/services/cryptography.service';
+import { UserRepository } from 'src/infra/database/pg/repositories/user.repository';
+import { UniqueEntityId } from 'src/core/entities/unique-entity-id';
 
-export function makeUser(override?: Partial<IUser>) {
-  return User.create({
+export function makeUser(override?: Partial<IUser>, id?: UniqueEntityId) {
+  const props: IUser = {
     person: makePerson(),
     password: faker.internet.password(),
     username: faker.internet.username(),
     ...override,
-  });
+  };
+  return User.create(props, id);
 }
 
 @Injectable()
 export class FactoryUser {
   constructor(
-    private pgService: PGService,
-    private factoryPerson: FactoryPerson,
+    private userRepository: UserRepository,
     private cryptographyService: CryptographyService,
+    private factoryPerson: FactoryPerson,
   ) {}
 
-  async makeUserOnDatabase(data: Partial<IUser> = {}): Promise<User> {
-    let person: Person;
+  async makeUserOnDatabase(
+    data: Partial<IUser> = {},
+    id?: UniqueEntityId,
+  ): Promise<User> {
+    const user = makeUser(
+      {
+        ...data,
+      },
+      id,
+    );
 
-    if (data.person) {
-      person = await this.factoryPerson.makePersonOnDatabase({
-        name: data.person.getName(),
-      });
-    } else {
-      person = await this.factoryPerson.makePersonOnDatabase();
-    }
-
-    const user = makeUser({
-      person,
-      ...data,
-    });
+    await this.factoryPerson.makePersonOnDatabase(
+      {
+        name: user.getPerson().getName(),
+      },
+      user.getPerson().id,
+    );
 
     const cryptographyPassword = await this.cryptographyService.hash(
       user.getPassword(),
@@ -45,15 +48,7 @@ export class FactoryUser {
 
     user.setPassword(cryptographyPassword);
 
-    await this.pgService.query({
-      text: `INSERT INTO users(id, person_id, username, password) VALUES($1, $2, $3, $4);`,
-      values: [
-        user.id.toString(),
-        user.getPerson().id.toString(),
-        user.getUsername(),
-        user.getPassword(),
-      ],
-    });
+    await this.userRepository.create(user);
 
     return user;
   }

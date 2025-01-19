@@ -3,43 +3,58 @@ import { INestApplication } from '@nestjs/common';
 import { AppModule } from 'src/app.module';
 
 import * as request from 'supertest';
-import { GenerateJWTTokenService } from 'src/infra/authentication/services/generate.jwt.token.service';
 import { DatabaseService } from 'test/setup.e2e';
+import { FactoryUser, makeUser } from 'test/factories/factory.user';
+import { CryptographyModule } from 'src/infra/cryptography/cryptography.module';
+import { FactoryPerson } from 'test/factories/factory.person';
+import { AuthenticateUserService } from 'src/domain/back-office/services/user/services/authenticate.user.service';
+import { DatabaseModule } from 'src/infra/database/database.module';
 
 describe('GET /v1/status', () => {
   let app: INestApplication;
-  let jwt: GenerateJWTTokenService;
+  let factoryUser: FactoryUser;
+  let authenticateUserService: AuthenticateUserService;
 
   beforeEach(async () => {
     await DatabaseService.start();
 
     const moduleRef = await Test.createTestingModule({
-      imports: [AppModule],
+      imports: [AppModule, DatabaseModule, CryptographyModule],
+      providers: [FactoryPerson, FactoryUser],
     }).compile();
 
     app = moduleRef.createNestApplication();
-    jwt = moduleRef.get(GenerateJWTTokenService);
+    factoryUser = moduleRef.get(FactoryUser);
+    authenticateUserService = moduleRef.get(AuthenticateUserService);
 
     await app.init();
   });
 
-  describe('Anonymous uses', () => {
-    test('Retrieving current system status', async () => {
+  describe('Retrieving current system status', () => {
+    test('without access token', async () => {
       const response = await request(app.getHttpServer()).get('/v1/status');
-
       expect(response.statusCode).toEqual(401);
     });
-  });
 
-  describe('Authenticated uses', () => {
-    test('Retrieving current system status', async () => {
-      const JWTResult = await jwt.execute({});
+    test('with access token', async () => {
+      const fake_user = makeUser();
 
-      let access_token: string;
+      await factoryUser.makeUserOnDatabase({
+        person: fake_user.getPerson(),
+        username: fake_user.getUsername(),
+        password: fake_user.getPassword(),
+      });
 
-      if (JWTResult.isRight()) {
-        access_token = JWTResult.value.access_token;
+      const authenticateUser = await authenticateUserService.execute({
+        username: fake_user.getUsername(),
+        password: fake_user.getPassword(),
+      });
+
+      if (authenticateUser.isLeft()) {
+        throw authenticateUser.value;
       }
+
+      const { access_token } = authenticateUser.value;
 
       const response = await request(app.getHttpServer())
         .get('/v1/status')

@@ -8,7 +8,7 @@ export class PersonRepository {
 
   async create(person: Person) {
     await this.pgService.query({
-      text: 'INSERT INTO persons(id, name) VALUES(?, ?)',
+      text: 'INSERT INTO persons(id, name) VALUES($1, $2)',
       values: [person.id.toString(), person.getName()],
     });
   }

@@ -2,14 +2,32 @@ import { Injectable } from '@nestjs/common';
 import { PGService } from '../pg.service';
 import { User } from 'src/domain/back-office/entities/user';
 import { Person } from 'src/domain/back-office/entities/person';
+import { UniqueEntityId } from 'src/core/entities/unique-entity-id';
 
 @Injectable()
 export class UserRepository {
   constructor(private pgService: PGService) {}
 
+  async create(user: User) {
+    await this.pgService.query({
+      text: `INSERT INTO users(id, person_id, username, password) VALUES($1, $2, $3, $4);`,
+      values: [
+        user.id.toString(),
+        user.getPerson().id.toString(),
+        user.getUsername(),
+        user.getPassword(),
+      ],
+    });
+  }
+
   async getByUsername(username: string): Promise<User | undefined> {
     const result = await this.pgService.query({
-      text: 'SELECT * FROM users WHERE username = $1',
+      text: `
+        SELECT u.*, P.name FROM users U
+          INNER JOIN persons P on
+            p.id = U.person_id
+        WHERE username = $1
+      `,
       values: [username],
     });
 
@@ -17,7 +35,12 @@ export class UserRepository {
       return undefined;
     } else {
       return User.create({
-        person: {} as Person,
+        person: Person.create(
+          {
+            name: result.rows[0].name,
+          },
+          new UniqueEntityId(result.rows[0].person_id),
+        ),
         password: result.rows[0].password,
         username: result.rows[0].username,
       });

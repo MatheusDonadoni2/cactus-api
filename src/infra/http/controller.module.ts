@@ -9,7 +9,6 @@ import { CryptographyModule } from '../cryptography/cryptography.module';
 import { CreatePersonService } from 'src/domain/back-office/services/person/create.person.service';
 import { CreatePersonController } from 'src/domain/back-office/controllers/person/create.person.controller';
 import { GetUserServiceByUserNameService } from 'src/domain/back-office/services/user/services/get.user.service';
-
 @Module({
   imports: [DatabaseModule, AuthenticationModule, CryptographyModule],
   providers: [
