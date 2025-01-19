@@ -38,10 +38,6 @@ export class AuthenticateUserService {
       return left(new UsernameOrPasswordIncorrect());
     }
 
-    if (username !== user.value.user.getUsername()) {
-      return left(new UsernameOrPasswordIncorrect());
-    }
-
     const isValidPassword = await this.cryptographyService.compare(
       password,
       user.value.user.getPassword(),

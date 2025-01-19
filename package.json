@@ -12,7 +12,7 @@
     "start:watch": "nest start --watchAll --verbose",
     "test": "npm run services:up && jest --config=test/jest.config.ts --runInBand",
     "posttest": "npm run services:down",
-    "test:watch": "jest --watch",
+    "test:watch": "npm run services:up && jest --config=test/jest.config.ts --runInBand --watch",
     "posttest:watch": "npm run services:down",
     "commit": "cz",
     "prepare": "husky",
