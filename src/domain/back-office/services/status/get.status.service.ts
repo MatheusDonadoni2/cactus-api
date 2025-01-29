@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { Either, left, right } from '~/core/error/either';
-import { PGStatusRepository } from '~/infra/database/pg/repositories/pg-status-repository';
+import { PGStatusRepository } from '~/infra/database/pg/repositories/pg.status.repository';
 import { Status } from '~backOffice/entities/status';
 import { InternalServerError } from '~customErrors/internal-server-error';
 

@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { InternalServerError } from '~customErrors/internal-server-error';
 import { Either, left, right } from 'src/core/error/either';
+
+import { InternalServerError } from '~customErrors/internal-server-error';
 
 type GenerateJWTTokenServiceResponse = Either<
   InternalServerError,

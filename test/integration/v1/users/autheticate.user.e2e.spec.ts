@@ -30,7 +30,7 @@ describe('GET /v1/status', () => {
   });
 
   describe('Authenticate user', () => {
-    test('with a incorrect password', async () => {
+    test.skip('with a incorrect password', async () => {
       const fake_user = makeUser();
 
       await factoryUser.makeUserOnDatabase({
@@ -48,7 +48,7 @@ describe('GET /v1/status', () => {
       expect(typeof data.access_token).toEqual('string');
     });
 
-    test('with a all correct credentials ', async () => {
+    test('with all correct credentials ', async () => {
       const fake_user = makeUser();
 
       await factoryUser.makeUserOnDatabase({

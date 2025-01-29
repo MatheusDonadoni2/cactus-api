@@ -2,12 +2,20 @@ import { faker } from '@faker-js/faker';
 import { Injectable } from '@nestjs/common';
 import { UniqueEntityId } from 'src/core/entities/unique-entity-id';
 
+import { IPersonRepository } from '~/domain/back-office/repositories/person.repository';
 import { IPerson, Person } from '~backOffice/entities/person';
-import { PersonRepository } from '~infra/database/pg/repositories/person-repository';
+
+import { FactoryLegalPerson, makeLegalPerson } from './factory.legal.person';
+import {
+  FactoryNaturalPerson,
+  makeNaturalPerson,
+} from './factory.natural.person';
 
 export function makePerson(override?: Partial<IPerson>, id?: UniqueEntityId) {
-  const props = {
+  const props: IPerson = {
     name: faker.person.fullName(),
+    legalPerson: makeLegalPerson(),
+    naturalPerson: makeNaturalPerson(),
     ...override,
   };
 
@@ -18,16 +26,46 @@ export function makePerson(override?: Partial<IPerson>, id?: UniqueEntityId) {
 
 @Injectable()
 export class FactoryPerson {
-  constructor(private personRepository: PersonRepository) {}
+  constructor(
+    private personRepository: IPersonRepository,
+    private factoryNaturalPerson: FactoryNaturalPerson,
+    private factoryLegalPerson: FactoryLegalPerson,
+  ) {}
 
   async makePersonOnDatabase(
     data: Partial<IPerson> = {},
     id?: UniqueEntityId,
   ): Promise<Person> {
-    const person = makePerson(data, id);
+    try {
+      const person = makePerson(data, id);
 
-    await this.personRepository.create(person);
+      await this.personRepository.startTransaction();
 
-    return person;
+      await this.personRepository.create({
+        person,
+      });
+
+      await this.factoryNaturalPerson.makeNaturalPersonOnDatabase(
+        person.id.toString(),
+        {
+          CPF: person.getNaturalPerson().getCPF(),
+        },
+        person.getNaturalPerson().id,
+      );
+
+      await this.factoryLegalPerson.makeLegalPersonOnDatabase(
+        person.id.toString(),
+        {
+          CNPJ: person.getLegalPerson().getCNPJ(),
+        },
+        person.getLegalPerson().id,
+      );
+
+      await this.personRepository.commitTransaction();
+
+      return person;
+    } catch (error) {
+      console.error(error);
+    }
   }
 }

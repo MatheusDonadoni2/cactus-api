@@ -15,23 +15,25 @@ export class PGStatusRepository {
     try {
       const updated_at = new Date().toISOString();
 
-      const databaseVersionResult = await this.pgService.query({
+      const databaseVersionResult = await this.pgService.findManyWithoutTypes({
         text: 'SHOW server_version;',
       });
       const databaseVersionResultValue =
         databaseVersionResult.rows[0].server_version;
 
-      const databaseMaxConnectionsResult = await this.pgService.query({
-        text: 'SHOW max_connections',
-      });
+      const databaseMaxConnectionsResult =
+        await this.pgService.findManyWithoutTypes({
+          text: 'SHOW max_connections',
+        });
       const databaseMaxConnectionsResultValue =
         databaseMaxConnectionsResult.rows[0].max_connections;
 
       const databaseName = this.envService.get('POSTGRES_DB');
-      const databaseOpenedConnectionsResult = await this.pgService.query({
-        text: `SELECT COUNT(1)::int from pg_stat_activity WHERE datname = $1`,
-        values: [databaseName],
-      });
+      const databaseOpenedConnectionsResult =
+        await this.pgService.findManyWithoutTypes({
+          text: `SELECT COUNT(1)::int from pg_stat_activity WHERE datname = $1`,
+          values: [databaseName],
+        });
       const databaseOpenedConnectionsResultValue =
         databaseOpenedConnectionsResult.rows[0].count;
 

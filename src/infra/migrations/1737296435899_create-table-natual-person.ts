@@ -23,6 +23,7 @@ export async function up(pgm: MigrationBuilder): Promise<void> {
     cpf: {
       type: 'varchar(11)',
       notNull: true,
+      unique: true,
     },
     updated_at: {
       type: 'timestamp',
