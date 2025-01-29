@@ -2,13 +2,11 @@ import { faker } from '@faker-js/faker/.';
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import * as request from 'supertest';
-import { FactoryPerson } from 'test/factories/factory.person';
+import { FactoryModule } from 'test/factories/factory.module';
 import { FactoryUser, makeUser } from 'test/factories/factory.user';
 import { DatabaseService } from 'test/setup.e2e';
 
 import { AppModule } from '~/app.module';
-import { CryptographyModule } from '~infra/cryptography/cryptography.module';
-import { DatabaseModule } from '~infra/database/database.module';
 
 describe('GET /v1/status', () => {
   let app: INestApplication;
@@ -18,8 +16,8 @@ describe('GET /v1/status', () => {
     await DatabaseService.start();
 
     const moduleRef = await Test.createTestingModule({
-      imports: [AppModule, DatabaseModule, CryptographyModule],
-      providers: [FactoryPerson, FactoryUser],
+      imports: [AppModule, FactoryModule],
+      providers: [],
     }).compile();
 
     app = moduleRef.createNestApplication();
@@ -30,40 +28,44 @@ describe('GET /v1/status', () => {
   });
 
   describe('Authenticate user', () => {
-    test.skip('with a incorrect password', async () => {
-      const fake_user = makeUser();
+    describe('🟢 should be able to authenticate a user', () => {
+      test('with all correct credentials ', async () => {
+        const fake_user = makeUser();
 
-      await factoryUser.makeUserOnDatabase({
-        password: fake_user.getPassword(),
-        username: fake_user.getUsername(),
-      });
-
-      const response = await request(app.getHttpServer())
-        .get('/v1/users/auth')
-        .send({
-          username: fake_user.getUsername(),
+        await factoryUser.makeUserOnDatabase({
           password: fake_user.getPassword(),
+          username: fake_user.getUsername(),
         });
-      const data = response.body.data;
-      expect(typeof data.access_token).toEqual('string');
+
+        const response = await request(app.getHttpServer())
+          .get('/v1/users/auth')
+          .send({
+            username: fake_user.getUsername(),
+            password: faker.internet.password(),
+          });
+
+        expect(response.statusCode).toEqual(401);
+      });
     });
 
-    test('with all correct credentials ', async () => {
-      const fake_user = makeUser();
+    describe('🔴 should not able be to authenticate a user', () => {
+      test('with a incorrect password', async () => {
+        const fake_user = makeUser();
 
-      await factoryUser.makeUserOnDatabase({
-        password: fake_user.getPassword(),
-        username: fake_user.getUsername(),
-      });
-
-      const response = await request(app.getHttpServer())
-        .get('/v1/users/auth')
-        .send({
+        await factoryUser.makeUserOnDatabase({
+          password: fake_user.getPassword(),
           username: fake_user.getUsername(),
-          password: faker.internet.password(),
         });
 
-      expect(response.statusCode).toEqual(401);
+        const response = await request(app.getHttpServer())
+          .get('/v1/users/auth')
+          .send({
+            username: fake_user.getUsername(),
+            password: fake_user.getPassword(),
+          });
+        const data = response.body.data;
+        expect(typeof data.access_token).toEqual('string');
+      });
     });
   });
 });

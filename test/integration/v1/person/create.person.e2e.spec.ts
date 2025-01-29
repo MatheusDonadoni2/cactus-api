@@ -283,7 +283,7 @@ describe('POST /v1/persons', () => {
         expect(personsOnDatabase).toHaveLength(0);
       });
 
-      test('with invalid invalid CNPJ', async () => {
+      test('with invalid CNPJ', async () => {
         const fakeUser = makeUser();
         await factoryUser.makeUserOnDatabase({
           person: fakeUser.getPerson(),
@@ -330,7 +330,57 @@ describe('POST /v1/persons', () => {
         );
       });
 
-      test('with invalid invalid CPF', async () => {
+      test('with invalid CNPJ and valid CPF', async () => {
+        const fakeUser = makeUser();
+        await factoryUser.makeUserOnDatabase({
+          person: fakeUser.getPerson(),
+          username: fakeUser.getUsername(),
+          password: fakeUser.getPassword(),
+        });
+
+        const authenticateUserServiceResult =
+          await authenticateUserService.execute({
+            username: fakeUser.getUsername(),
+            password: fakeUser.getPassword(),
+          });
+
+        if (authenticateUserServiceResult.isLeft()) {
+          return authenticateUserServiceResult.value;
+        }
+
+        const { access_token } = authenticateUserServiceResult.value;
+
+        const person = {
+          name: faker.person.fullName(),
+          legal_person: {
+            cnpj: 'INVALID_CNPJ',
+          },
+          natural_person: {
+            cpf: fakerBr.cpf.generate(),
+          },
+        };
+
+        const response = await request(app.getHttpServer())
+          .post('/v1/persons')
+          .set('Authorization', `Bearer ${access_token}`)
+          .send(person);
+
+        expect(response.statusCode).toEqual(400);
+
+        const personRepositoryResult = await personRepository.fetchAll();
+
+        if (personRepositoryResult.isLeft()) {
+          throw personRepositoryResult.value;
+        }
+
+        const { persons: personsOnDatabase } = personRepositoryResult.value;
+        expect(personsOnDatabase).toHaveLength(1);
+        expect(personsOnDatabase[0].id.toString()).toEqual(
+          fakeUser.getPerson().id.toString(),
+        );
+      });
+
+      test('with invalid CPF', async () => {
         const fakeUser = makeUser();
         await factoryUser.makeUserOnDatabase({
           person: fakeUser.getPerson(),
@@ -377,7 +427,57 @@ describe('POST /v1/persons', () => {
         );
       });
 
-      test('with cnpj already exists', async () => {
+      test('with invalid CPF and valid CNPJ', async () => {
+        const fakeUser = makeUser();
+        await factoryUser.makeUserOnDatabase({
+          person: fakeUser.getPerson(),
+          username: fakeUser.getUsername(),
+          password: fakeUser.getPassword(),
+        });
+
+        const authenticateUserServiceResult =
+          await authenticateUserService.execute({
+            username: fakeUser.getUsername(),
+            password: fakeUser.getPassword(),
+          });
+
+        if (authenticateUserServiceResult.isLeft()) {
+          return authenticateUserServiceResult.value;
+        }
+
+        const { access_token } = authenticateUserServiceResult.value;
+
+        const person = {
+          name: faker.person.fullName(),
+          legal_person: {
+            cnpj: fakerBr.cnpj.generate(),
+          },
+          natural_person: {
+            cpf: 'INVALID_CPF',
+          },
+        };
+
+        const response = await request(app.getHttpServer())
+          .post('/v1/persons')
+          .set('Authorization', `Bearer ${access_token}`)
+          .send(person);
+
+        expect(response.statusCode).toEqual(400);
+
+        const personRepositoryResult = await personRepository.fetchAll();
+
+        if (personRepositoryResult.isLeft()) {
+          throw personRepositoryResult.value;
+        }
+
+        const { persons: personsOnDatabase } = personRepositoryResult.value;
+        expect(personsOnDatabase).toHaveLength(1);
+        expect(personsOnDatabase[0].id.toString()).toEqual(
+          fakeUser.getPerson().id.toString(),
+        );
+      });
+
+      test('with CNPJ already exists', async () => {
         const fakeUser = makeUser();
         await factoryUser.makeUserOnDatabase({
           person: fakeUser.getPerson(),
@@ -432,7 +532,7 @@ describe('POST /v1/persons', () => {
         expect(personsOnDatabase).toHaveLength(2);
       });
 
-      test('with cnpj already exists and cpf not', async () => {
+      test('with a CNPJ that already exists and a CPF that does not', async () => {
         const fakeUser = makeUser();
         await factoryUser.makeUserOnDatabase({
           person: fakeUser.getPerson(),
@@ -490,7 +590,7 @@ describe('POST /v1/persons', () => {
         expect(personsOnDatabase).toHaveLength(2);
       });
 
-      test('with cpf already exists', async () => {
+      test('with CPF already exists', async () => {
         const fakeUser = makeUser();
         await factoryUser.makeUserOnDatabase({
           person: fakeUser.getPerson(),
@@ -545,7 +645,7 @@ describe('POST /v1/persons', () => {
         expect(personsOnDatabase).toHaveLength(2);
       });
 
-      test('with cpf already exists and cnpj not', async () => {
+      test('with a CPF that already exists and a CNPJ that does not', async () => {
         const fakeUser = makeUser();
         await factoryUser.makeUserOnDatabase({
           person: fakeUser.getPerson(),
@@ -582,7 +682,7 @@ describe('POST /v1/persons', () => {
             cnpj: fakerBr.cnpj.generate(),
           },
           natural_person: {
-            cpf: fakerBr.cpf.generate(),
+            cpf: fakePerson.getNaturalPerson().getCPF(),
           },
         };
 
