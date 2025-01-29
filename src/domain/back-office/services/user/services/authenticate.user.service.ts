@@ -6,7 +6,7 @@ import { UsernameOrPasswordIncorrect } from '~customErrors/username-or-password-
 import { GenerateJWTTokenService } from '~infra/authentication/services/generate.jwt.token.service';
 import { CryptographyService } from '~infra/cryptography/services/cryptography.service';
 
-import { GetUserServiceByUserNameService } from './get.user.service';
+import { GetUserServiceByUserNameService } from './get.user.by.username.service';
 
 interface AuthenticateUserServiceRequest {
   username: string;
@@ -32,17 +32,20 @@ export class AuthenticateUserService {
   ): Promise<AuthenticateUserServiceResponse> {
     const { username, password } = props;
 
-    const user = await this.getUserServiceByUserNameService.execute({
-      username,
-    });
+    const resultGetUserServiceByUserNameService =
+      await this.getUserServiceByUserNameService.execute({
+        username,
+      });
 
-    if (user.isLeft()) {
-      return left(new UsernameOrPasswordIncorrect());
+    if (resultGetUserServiceByUserNameService.isLeft()) {
+      return left(resultGetUserServiceByUserNameService.value);
     }
+
+    const { user } = resultGetUserServiceByUserNameService.value;
 
     const isValidPassword = await this.cryptographyService.compare(
       password,
-      user.value.user.getPassword(),
+      user.getPassword(),
     );
 
     if (!isValidPassword) {

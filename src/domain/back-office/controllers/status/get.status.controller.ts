@@ -6,7 +6,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
-import { Presenter } from '~backOffice/controllers/status/get.status.controller.presenter';
+import { Presenter } from '~/domain/back-office/controllers/status/get.status..presenter';
 import { GetStatusService } from '~backOffice/services/status/get.status.service';
 import { InternalServerError } from '~customErrors/internal-server-error';
 import { AuthenticationGuard } from '~infra/authentication/guards/authentication.guard';

@@ -2,15 +2,15 @@ import { faker } from '@faker-js/faker';
 import { Injectable } from '@nestjs/common';
 
 import { UniqueEntityId } from '~/core/entities/unique-entity-id';
+import { IUserRepository } from '~/domain/back-office/repositories/user.repository';
 import { IUser, User } from '~backOffice/entities/user';
 import { CryptographyService } from '~infra/cryptography/services/cryptography.service';
-import { UserRepository } from '~infra/database/pg/repositories/user.repository';
 
 import { FactoryPerson, makePerson } from './factory.person';
 
 export function makeUser(override?: Partial<IUser>, id?: UniqueEntityId) {
   const props: IUser = {
-    person: makePerson(),
+    person: makePerson({ ...override?.person }),
     password: faker.internet.password(),
     username: faker.internet.username(),
     ...override,
@@ -21,7 +21,7 @@ export function makeUser(override?: Partial<IUser>, id?: UniqueEntityId) {
 @Injectable()
 export class FactoryUser {
   constructor(
-    private userRepository: UserRepository,
+    private userRepository: IUserRepository,
     private cryptographyService: CryptographyService,
     private factoryPerson: FactoryPerson,
   ) {}
@@ -50,7 +50,7 @@ export class FactoryUser {
 
     user.setPassword(cryptographyPassword);
 
-    await this.userRepository.create(user);
+    await this.userRepository.create({ user });
 
     return user;
   }
