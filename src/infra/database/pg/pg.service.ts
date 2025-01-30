@@ -1,13 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { Client, QueryConfig } from 'pg';
 
+import { ITransactionsFunctions } from '~/core/database/transaction/transaction';
 import { EnvService } from '~infra/env/env.service';
 
 @Injectable()
-export class PGService {
+export class PGService implements ITransactionsFunctions {
   private client: Client;
 
   constructor(private envService: EnvService) {}
+
   private async getNewConnection() {
     const client = new Client({
       host: this.envService.get('POSTGRES_HOST'),
@@ -50,14 +52,14 @@ export class PGService {
         await this.client.query('COMMIT');
       }
     } catch (error) {
-      await this.rollBackTransaction();
+      await this.rollbackTransaction();
       throw error;
     } finally {
       await this.disconnect();
     }
   }
 
-  async rollBackTransaction() {
+  async rollbackTransaction() {
     try {
       if (this.client !== undefined) {
         await this.client.query('ROLLBACK');
@@ -73,7 +75,7 @@ export class PGService {
     try {
       return await this.client.query(queryObject);
     } catch (error) {
-      await this.rollBackTransaction();
+      await this.rollbackTransaction();
       throw error;
     }
   }
