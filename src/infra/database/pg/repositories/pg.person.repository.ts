@@ -11,7 +11,7 @@ import {
   IGetByIdResponse,
   IPersonRepository,
 } from '~/domain/back-office/repositories/person.repository';
-import { PGTransaction } from '~/domain/back-office/repositories/transactions';
+import { PGTransaction } from '~/infra/database/pg/transaction/pg.transactions';
 import { PGService } from '~infra/database/pg/pg.service';
 
 import { IPersonDBResponse, PGPersonMapper } from '../mapper/pg.person.mapper';
