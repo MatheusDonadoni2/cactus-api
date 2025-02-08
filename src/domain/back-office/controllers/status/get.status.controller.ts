@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Controller,
   Get,
   InternalServerErrorException,
@@ -8,7 +7,6 @@ import {
 
 import { Presenter } from '~/domain/back-office/controllers/status/get.status..presenter';
 import { GetStatusService } from '~backOffice/services/status/get.status.service';
-import { InternalServerError } from '~customErrors/internal-server-error';
 import { AuthenticationGuard } from '~infra/authentication/guards/authentication.guard';
 
 @Controller('v1/status')
@@ -24,10 +22,8 @@ export class GetStatusController {
       const error = result.value;
 
       switch (error.constructor) {
-        case InternalServerError:
-          throw new InternalServerErrorException();
         default:
-          throw new BadRequestException();
+          throw new InternalServerErrorException();
       }
     }
 

@@ -28,7 +28,7 @@ export class GetPersonByIdService {
     });
 
     if (result.isLeft()) {
-      return left(new InternalServerError());
+      return left(result.value);
     }
 
     const { person } = result.value;
