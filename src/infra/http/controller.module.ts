@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 
+import { GetPersonController } from '~/domain/back-office/controllers/person/get.person.controller';
 import { BackOfficeModule } from '~/domain/back-office/services/backOffice.service.module';
 import { CreatePersonController } from '~backOffice/controllers/person/create.person.controller';
 import { GetStatusController } from '~backOffice/controllers/status/get.status.controller';
@@ -14,6 +15,7 @@ import { AuthenticationModule } from '../authentication/authentication.module';
     GetStatusController,
     CreatePersonController,
     CreatePersonController,
+    GetPersonController,
   ],
 })
 export class ControllerModule {}

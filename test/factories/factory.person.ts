@@ -35,6 +35,13 @@ export class FactoryPerson {
   async makePersonOnDatabase(
     data: Partial<IPerson> = {},
     id?: UniqueEntityId,
+    config: {
+      createLegalPerson?: boolean;
+      createNaturalPerson?: boolean;
+    } = {
+      createLegalPerson: true,
+      createNaturalPerson: true,
+    },
   ): Promise<Person> {
     try {
       const person = makePerson(data, id);
@@ -45,22 +52,25 @@ export class FactoryPerson {
         person,
       });
 
-      await this.factoryNaturalPerson.makeNaturalPersonOnDatabase(
-        person.id.toString(),
-        {
-          CPF: person.getNaturalPerson().getCPF(),
-        },
-        person.getNaturalPerson().id,
-      );
+      if (config.createNaturalPerson) {
+        await this.factoryNaturalPerson.makeNaturalPersonOnDatabase(
+          person.id.toString(),
+          {
+            CPF: person.getNaturalPerson().getCPF(),
+          },
+          person.getNaturalPerson().id,
+        );
+      }
 
-      await this.factoryLegalPerson.makeLegalPersonOnDatabase(
-        person.id.toString(),
-        {
-          CNPJ: person.getLegalPerson().getCNPJ(),
-        },
-        person.getLegalPerson().id,
-      );
-
+      if (config.createLegalPerson) {
+        await this.factoryLegalPerson.makeLegalPersonOnDatabase(
+          person.id.toString(),
+          {
+            CNPJ: person.getLegalPerson().getCNPJ(),
+          },
+          person.getLegalPerson().id,
+        );
+      }
       await this.personRepository.commitTransaction();
 
       return person;

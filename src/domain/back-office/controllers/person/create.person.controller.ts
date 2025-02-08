@@ -6,7 +6,6 @@ import {
   Post,
 } from '@nestjs/common';
 
-import { InternalServerError } from '~/core/error/custom-errors-class/internal-server-error';
 import { ResourceIsInvalid } from '~/core/error/custom-errors-class/resource.is.invalid';
 import { ResourceSentAreNotEnough } from '~/core/error/custom-errors-class/resource.sent.are.not.enough';
 import { CreatePersonService } from '~backOffice/services/person/create.person.service';
@@ -40,14 +39,12 @@ export class CreatePersonController {
       const error = result.value;
 
       switch (error.constructor) {
-        case InternalServerError:
-          throw new InternalServerErrorException();
         case ResourceSentAreNotEnough:
           throw new BadRequestException({ ...error, message: error.message });
         case ResourceIsInvalid:
           throw new BadRequestException({ ...error, message: error.message });
         default:
-          throw new BadRequestException();
+          throw new InternalServerErrorException();
       }
     }
 
